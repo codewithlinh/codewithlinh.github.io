@@ -36,11 +36,13 @@ Xét tập không gian gồm $k$ features, ta cần biểu diễn $j$ thành ph�
 
 2.  **Tìm đường fit cho tất cả data point** và đi qua gốc tọa độ sao cho khoảng cách giữa tất cả data đến đường thẳng đó là nhỏ nhất (có cách giải thích khác trong video [2])  bằng cách quay đường thẳng và thử cho đến khi tìm được tổng giá trị nhỏ nhất khoảng cách giữa tất cả data và đường fit. 
 
-    Tuy nhiên, thường dễ dàng hơn nếu ta tính **maximize the distances from the projected data points to the origin (sum of squared distances (SS))** (cách tính chi tiết dựa theo định lý Pytago được trình bày rất dễ hiểu trong video [2]). Cuối cùng, ta tìm được đường thẳng với giá trị variance tối đa.
+    Tuy nhiên, thường dễ dàng hơn nếu ta tính **maximize the distances from the projected data points to the origin (sum of squared distances (SS))** (cách tính chi tiết dựa theo định lý Pytago được trình bày rất dễ hiểu trong video [2]). Cuối cùng, ta tìm được đường thẳng với giá trị variance (sum of squared distances) tối đa.
 
     ![pca-step2](step-2.png)_Finding the best fit. Start with a random line (top) and rotate until it fits the data best by minimizing the distances from the data points to the line (bottom)_
 
-3.  **Computing the Principal Components**:
+3.  **Computing the Principal Components and the loadings**:
+
+    Sau khi xác định được đường “best-fitted line”, hay còn gọi là 1st principle components PC1. Tiếp theo ta cần tính toán slope (góc) của PC1 để biết mức độ contribute của mỗi feature cho PC1.
 
     -   Trong ví dụ này, ta có thể để ý rằng, data có xu hướng phụ thuộc (spread out) vào feature 1 nhiều hơn feature 2. Giá trị feature 1 càng xa gốc tọa độ, giá trị của data cũng dãn theo. Ta có thể tính được góc (slope) của đường fit từ bước 2, nhận thấy mỗi 2 units feature 1 kéo theo giảm 1 unit với feature 2. Từ đó, ta có thể tính được eigenvector của PC1 là 2.33, tính toán theo hình dưới.
 
@@ -50,18 +52,20 @@ Xét tập không gian gồm $k$ features, ta cần biểu diễn $j$ thành ph�
 
     -   Bước tiếp theo là xác định PC2, là đường thẳng cũng đi qua gốc tọa độ và vuông góc với PC1. Đối với các data có nhiều feature hơn, ta chỉ cần tìm đường PC1 và sau đó là các đường vuông góc với nó. *New latent variables, aka the PCs, are a linear combination of the initial features. The proportion of each feature that is used in the PC is named the coefficient.*
 
+    ![pca-2com](2-pca.png)_Computing PC1 and PC2 and determining the loadings._
+
 > **Standardization**: Thực tế là, trước khi thực hiện PCA, ta cần phải standardlize tất cả data. Lý do mình để phần này ở cuối cùng vì khi bạn đọc đã hiểu được concept của PCA, ta có thể hình dung ra các yếu tố có thể ảnh hưởng đến độ chính xác kết quả PCA. Rõ ràng như vậy, trong quá trình tìm đường fiting, nếu data không cùng range (diện tích ($m^2$) và giá nhà (tỷ)) hoặc data có outlier, đường fit sẽ bị ảnh hưởng rất lớn. Ta có thể thực hiện standardlize dễ dàng với Scikit-learn với hàm `StandardScaler()`.
 {: .prompt-info}
 
 ## Loadings - Tính toán mức độ contribute của mỗi component
 
-Ta có thể nhận ra rằng các thành phần chính khó có thể giải thích và không có ý nghĩa thực sự vì chúng được xây dựng dựa trên sự kết hợp tuyến tính của các feature ban đầu. Nhưng chúng ta có thể phân tích các trọng số mô tả sự quan trọng của các biến độc lập. Các trọng số, từ góc độ số học, bằng với các hệ số của các biến và cung cấp thông tin về biến nào đóng góp lớn nhất cho các thành phần.
+Ta có thể nhận ra rằng các thành phần chính khó có thể giải thích và không có ý nghĩa thực sự vì chúng được xây dựng dựa trên sự kết hợp tuyến tính của các feature ban đầu. Nhưng chúng ta có thể phân tích các trọng số mô tả sự quan trọng của các features. Các trọng số bằng với các hệ số của các feature và cung cấp thông tin về feature nào đóng góp lớn nhất cho các principle component.
 
--   Các trọng số có giá trị từ $-1$ đến $1$.
--   Giá trị tuyệt đối cao (gần 1 hoặc -1) cho ta biết rằng biến đó ảnh hưởng mạnh và giá trị gần 0 cho biết biến ảnh hưởng yếu.
+-   Các trọng số (loadings) có giá trị từ $-1$ đến $1$.
+-   Giá trị tuyệt đối cao (gần 1 hoặc -1) cho ta biết rằng feature đó ảnh hưởng mạnh và giá trị gần 0 cho biết feature ảnh hưởng yếu đến component.
 -   Dấu của một trọng số (+ hoặc -) cho biết liệu một biến và một thành phần chính có tương quan dương hay âm.
 
-Chúng ta đã tính được các thành phần chính (PCs) và bây giờ chúng ta có thể xoay (hoặc biến đổi transformation) toàn bộ bộ dữ liệu sao cho trục $x$ là hướng mà chúng ta thấy phương sai lớn nhất (gọi là PC1). Lưu ý rằng bước biến đổi này sẽ làm mất giá trị của các feature gốc. Thay vào đó, mỗi PC sẽ chứa một tỉ lệ của tổng phương sai (total variation), nhưng với phương sai được giải thích (***explained variance***), chúng ta có thể mô tả mức độ phương sai mà của PC. Để tính phương sai được giải thích, chúng ta có thể chia tổng khoảng cách bình phương (SS) cho mỗi PC cho số lượng điểm dữ liệu trừ đi một.
+Chúng ta đã tính được các thành phần chính (PCs) và bây giờ ta xoay (transformation) toàn bộ bộ dữ liệu sao cho trục $x$ là hướng có phương sai lớn nhất (largest variance). Lưu ý rằng bước biến đổi này sẽ làm mất giá trị của các feature gốc. Mỗi PC sẽ chứa một tỉ lệ của tổng phương sai (total variance) và từ đó có thể biết được mức độ quan trọng của mỗi component. Để tính phương sai được giải thích, chúng ta có thể chia tổng khoảng cách bình phương (SS) cho mỗi PC cho số lượng điểm dữ liệu trừ đi một.
 
 ![pca-transformation](transformation.png)_Transformation of the entire dataset and determining computing the explained variance_
 
