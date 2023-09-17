@@ -385,6 +385,13 @@ Cảm ơn bạn đã đọc, tôi hy vọng bài viết hữu ích. Nếu bạn 
 > Bạn đọc có thể tìm thấy code full của mình tại repo [đây](https://gist.github.com/hlinh96it/2a96fa4e7bc4d6f83a52633f8a77c956).
 {: .prompt-info}
 
+## Recommended resources for further learning
+
+Here are some recommended books for delving into deep learning from scratch:
+- [Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow](https://amzn.to/3YZeOAk) by Aurélien Géron
+- [Deep Learning from Scratch: Building with Python from First Principles](https://amzn.to/40gyjFQ) by Seth Weidman
+- [Data Science from Scratch: First Principles with Python](https://amzn.to/40ep3T7) by Joel Grus, a research engineer at the Allen Institute for Artificial Intelligence
+
 # References
 
 1.  <https://nerophung.github.io/2020/05/28/genetic-algorithm>
