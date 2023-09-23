@@ -24,12 +24,12 @@ def square_to_vec(D):
 
 
 def get_contrast_batch_labels(y):
-    '''
+    """
     Make contrast labels by taking all the pairwise in y
     y: tensor with shape: (batch_size, )
     returns:
         tensor with shape: (batch_size * (batch_size-1) // 2, )
-    '''
+    """
     y_col_vec = tf.reshape(tf.cast(y, tf.float32), [-1, 1])
     D_y = pdist_euclidean(y_col_vec)
     d_y = square_to_vec(D_y)
@@ -38,12 +38,12 @@ def get_contrast_batch_labels(y):
 
 
 def get_contrast_batch_labels_regression(y):
-    '''
+    """
     Make contrast labels for regression by taking all the pairwise in y
     y: tensor with shape: (batch_size, )
     returns:
         tensor with shape: (batch_size * (batch_size-1) // 2, )
-    '''
+    """
     raise NotImplementedError
 
 
