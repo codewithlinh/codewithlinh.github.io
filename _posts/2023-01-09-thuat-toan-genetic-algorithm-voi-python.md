@@ -1,5 +1,5 @@
 ---
-title: Giải thuật di truyền (Genetic Algorithm) với Python (Phần 1)
+title: Giải thuật di truyền (Genetic Algorithm) với Python
 author: hoanglinh
 categories: [Optimization Algorithms]
 tags: [meta-heuristics algorithm]
